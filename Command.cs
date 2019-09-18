@@ -12,7 +12,6 @@ namespace SlabFraming_1
 		public Result Execute(ExternalCommandData commandData,
 			ref string messege, ElementSet elements)
 		{
-			//go
 			try
 			{
 				MyWindow.MainWindow window = new MyWindow.MainWindow();
