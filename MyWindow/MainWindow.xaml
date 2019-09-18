@@ -1,0 +1,148 @@
+﻿    <Window x:Class="SlabFraming_1.MyWindow.MainWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SlabReinforcement_3.MyWindow"
+             mc:Ignorable="d" 
+             Title="SlabRebar" Height="220" Width="400"
+             ResizeMode="NoResize" 
+             Name="Window">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="80"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Name="TextBlockRebarBar"
+                           Grid.Column="0"
+                           Padding="1" Margin="10,15,15,10"
+                           Text="Select Rebar Bar Type">
+                    </TextBlock>
+                    <ComboBox Name="ComboBoxRebarBar"
+                          Grid.Column="1" Grid.ColumnSpan="2"
+                          Padding="2" Margin="5,5,5,5"
+                          ItemsSource="{Binding GetRebarBarType}"
+                          SelectedItem="{Binding NameRebarBarType}">
+                    </ComboBox>
+                </Grid>
+            </StackPanel>
+
+            <StackPanel Grid.Row="1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Name="RebarSpace"
+                           Grid.Column="0"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Text="RebarSpace">
+                    </TextBlock>
+                    <TextBox Name="TextBoxRebarSpace"
+                         Grid.Column="1"
+                         Padding="5" Margin="5,5,180,5">
+                        <TextBox.Text>
+                            <Binding Path="RebarSpace"
+                                 UpdateSourceTrigger="PropertyChanged"
+                                 NotifyOnValidationError="True">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </Grid>
+            </StackPanel>
+
+            <StackPanel Grid.Row="2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50"></ColumnDefinition>
+                        <ColumnDefinition Width="80"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Name="TextBlockParamertA"
+                           Grid.Row="0" Grid.Column="0"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Text="A">
+                    </TextBlock>
+                    <TextBox Name="TextBoxParamertA"
+                         Grid.Row="0" Grid.Column="1"
+                         Padding="5" Margin="5,5,5,5">
+                        <TextBox.Text>
+                            <Binding Path="VolumeParametrA"
+                                 UpdateSourceTrigger="PropertyChanged"
+                                 NotifyOnValidationError="True">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+
+                    <TextBlock Name="TextBlockParamertB"
+                       Grid.Row="1" Grid.Column="0"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Text="B">
+                    </TextBlock>
+                    <TextBox Name="TextBoxParamertB"
+                         Grid.Row="1" Grid.Column="1"
+                         Padding="5" Margin="5,5,5,5">
+                        <TextBox.Text>
+                            <Binding Path="VolumeParametrB"
+                                 UpdateSourceTrigger="PropertyChanged"
+                                 NotifyOnValidationError="True">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                    <Image Grid.Row="0" Grid.Column="2" Grid.RowSpan="2"
+                       Margin="5,5,100,5"
+                       Source="Image/G.png"
+                        Width="170" Height="70">
+                    </Image>
+                </Grid>
+            </StackPanel>
+
+            <StackPanel Grid.Row="3">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Name="Button_OK" Content="OK"
+                        Grid.Column="1"
+                        Padding="2" Margin="5,5,5,5"
+                        Command="{Binding ClickOk}">
+                    </Button>
+
+                    <Button Name="Button_Cancel" Content="Cancel"
+                        Grid.Column="2"
+                        Padding="2" Margin="5,5,5,5"
+                        Command="{Binding CloseWindowCommand}">
+                    </Button>
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </Window>
