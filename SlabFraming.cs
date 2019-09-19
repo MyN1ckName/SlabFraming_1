@@ -28,7 +28,6 @@ namespace SlabFraming_1
 
 		public string NameRebarShape { get; set; }
 		public string NameRebarBarType { get; set; }
-		private double volumeParametrA { get; set; }
 		public double VolumeParametrA { get; set; }
 		public double VolumeParametrB { get; set; }
 		public double RebarSpace { get; set; }
@@ -69,44 +68,82 @@ namespace SlabFraming_1
 					if (planarFace.FaceNormal.Z == 0)
 					{
 						XYZ origin = GetOrigin(planarFace, VolumeParametrA / coof);
-						XYZ xVec = planarFace.FaceNormal;
-						XYZ yVec = -planarFace.XVector;
+
 						using (Transaction t = new Transaction(doc, "SlabReinforcement_3"))
 						{
 							t.Start();
-							Rebar rebar = Rebar.CreateFromRebarShape(doc, rebarShape
-						, rebarBarType, host, origin, xVec, yVec);
-							if (null != rebar)
+
+							if (NameRebarShape == "Стж_Г")
 							{
-								bool barsOnNormalSide;
-								if (planarFace.YVector == new XYZ(0, 1, 0))
-									barsOnNormalSide = true;
-								else barsOnNormalSide = false;
+								XYZ xVec = planarFace.FaceNormal;
+								XYZ yVec = -planarFace.XVector;
 
-								int numberOfBarPositions = (int)Math.Round
-									(
-									((planarFace.GetBoundingBox().Max.V - (2 * 50 / coof))
-									/
-									(RebarSpace / coof)
-									+ 1)
-									);
+								Rebar rebar = Rebar.CreateFromRebarShape(doc, rebarShape
+									, rebarBarType, host, origin, xVec, yVec);
+								if (null != rebar)
+								{
+									bool barsOnNormalSide;
+									if (planarFace.YVector == new XYZ(0, 1, 0))
+										barsOnNormalSide = true;
+									else barsOnNormalSide = false;
 
-								double spacing = RebarSpace / coof;
-								bool includeFirstBar = true;
-								bool includeLastBar = true;
+									int numberOfBarPositions = (int)Math.Round
+										(
+										((planarFace.GetBoundingBox().Max.V - (2 * 50 / coof))
+										/
+										(RebarSpace / coof)
+										+ 1)
+										);
 
-								rebar.GetShapeDrivenAccessor()
-									.SetLayoutAsNumberWithSpacing(numberOfBarPositions
-									, spacing, barsOnNormalSide
-									, includeFirstBar, includeLastBar);
+									double spacing = RebarSpace / coof;
+									bool includeFirstBar = true;
+									bool includeLastBar = true;
+
+									rebar.GetShapeDrivenAccessor()
+										.SetLayoutAsNumberWithSpacing(numberOfBarPositions
+										, spacing, barsOnNormalSide
+										, includeFirstBar, includeLastBar);
+									foreach (Parameter para in rebar.Parameters)
+									{
+										SetParametr(para);
+									}
+								}
 							}
-							foreach (Parameter para in rebar.Parameters)
+							if (NameRebarShape == "Стж_П")
 							{
-								if (para.Definition.Name == "A")
-									para.Set(VolumeParametrA / coof);
+								XYZ xVec = -planarFace.XVector;
+								XYZ yVec = -planarFace.FaceNormal;
 
-								if (para.Definition.Name == "B")
-									para.Set(VolumeParametrB / coof);
+								Rebar rebar = Rebar.CreateFromRebarShape(doc, rebarShape
+									, rebarBarType, host, origin, xVec, yVec);
+								if (null != rebar)
+								{
+									bool barsOnNormalSide;
+									if (planarFace.YVector == new XYZ(0, 1, 0))
+										barsOnNormalSide = true;
+									else barsOnNormalSide = false;
+
+									int numberOfBarPositions = (int)Math.Round
+										(
+										((planarFace.GetBoundingBox().Max.V - (2 * 50 / coof))
+										/
+										(RebarSpace / coof)
+										+ 1)
+										);
+
+									double spacing = RebarSpace / coof;
+									bool includeFirstBar = true;
+									bool includeLastBar = true;
+
+									rebar.GetShapeDrivenAccessor()
+										.SetLayoutAsNumberWithSpacing(numberOfBarPositions
+										, spacing, barsOnNormalSide
+										, includeFirstBar, includeLastBar);
+									foreach (Parameter para in rebar.Parameters)
+									{
+										SetParametr(para);
+									}
+								}
 							}
 							t.Commit();
 						}
@@ -114,6 +151,15 @@ namespace SlabFraming_1
 				}
 				tg.Assimilate();
 			}
+		}
+
+		private void SetParametr(Parameter para)
+		{
+			if (para.Definition.Name == "A")
+				para.Set(VolumeParametrA / coof);
+
+			if (para.Definition.Name == "B")
+				para.Set(VolumeParametrB / coof);
 		}
 
 		private RebarShape GetRebarShape(string nameRebarShape)
@@ -158,36 +204,52 @@ namespace SlabFraming_1
 		{
 			double x = planarFace.Origin.X;
 			double y = planarFace.Origin.Y;
-			double otherCoverDistance =
-				(doc.GetElement(host.get_Parameter
-				(BuiltInParameter.CLEAR_COVER_OTHER).AsElementId()) as RebarCoverType)
-				.CoverDistance;
-			if (planarFace.FaceNormal.X > 0)
-				x =
-					x - Math.Abs(planarFace.FaceNormal.X
-					* (volumeParametrA + otherCoverDistance));
-			if (planarFace.FaceNormal.X < 0)
-				x =
-					x + Math.Abs(planarFace.FaceNormal.X
-					* (volumeParametrA + otherCoverDistance));
-			if (planarFace.FaceNormal.Y > 0)
-				y =
-					y - Math.Abs(planarFace.FaceNormal.Y
-					* (volumeParametrA + otherCoverDistance));
-			if (planarFace.FaceNormal.Y < 0)
-				y =
-					y + Math.Abs(planarFace.FaceNormal.Y
-					* (volumeParametrA + otherCoverDistance));
 
 			double topCoverDistance =
 				(doc.GetElement(host.get_Parameter
 				(BuiltInParameter.CLEAR_COVER_TOP).AsElementId()) as RebarCoverType)
 				.CoverDistance;
-
 			double z = planarFace.Origin.Z + planarFace.GetBoundingBox().Max.U
-					- topCoverDistance;
+						- topCoverDistance;
+			double otherCoverDistance =
+				(doc.GetElement(host.get_Parameter
+				(BuiltInParameter.CLEAR_COVER_OTHER).AsElementId()) as RebarCoverType)
+				.CoverDistance;
 
-			return new XYZ(x, y, z);
+			if (NameRebarShape == "Стж_Г")
+			{
+				if (planarFace.FaceNormal.X > 0)
+					x =
+						x - Math.Abs(planarFace.FaceNormal.X
+						* (volumeParametrA + otherCoverDistance));
+				if (planarFace.FaceNormal.X < 0)
+					x =
+						x + Math.Abs(planarFace.FaceNormal.X
+						* (volumeParametrA + otherCoverDistance));
+				if (planarFace.FaceNormal.Y > 0)
+					y =
+						y - Math.Abs(planarFace.FaceNormal.Y
+						* (volumeParametrA + otherCoverDistance));
+				if (planarFace.FaceNormal.Y < 0)
+					y =
+						y + Math.Abs(planarFace.FaceNormal.Y
+						* (volumeParametrA + otherCoverDistance));
+				return new XYZ(x, y, z);
+			}
+
+			else if (NameRebarShape == "Стж_П")
+			{
+				if (planarFace.FaceNormal.X > 0)
+					x = x - Math.Abs(planarFace.FaceNormal.X * otherCoverDistance);
+				if (planarFace.FaceNormal.X < 0)
+					x = x + Math.Abs(planarFace.FaceNormal.X * otherCoverDistance);
+				if (planarFace.FaceNormal.Y > 0)
+					y = y - Math.Abs(planarFace.FaceNormal.Y * otherCoverDistance);
+				if (planarFace.FaceNormal.Y < 0)
+					y = y + Math.Abs(planarFace.FaceNormal.Y * otherCoverDistance);
+				return new XYZ(x, y, z);
+			}
+			else return null;
 		}
 	}
 }

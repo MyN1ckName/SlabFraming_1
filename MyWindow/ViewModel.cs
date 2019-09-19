@@ -20,7 +20,7 @@ namespace SlabFraming_1.MyWindow
 			slabFraming = new SlabFraming(commandData);
 			doc = commandData.Application.ActiveUIDocument.Document;
 			this.window = window;
-			slabFraming.NameRebarShape = "Стж_Г";
+			slabFraming.NameRebarShape = "Стж_П";
 			slabFraming.RebarSpace = 200;
 			slabFraming.VolumeParametrA = 500;
 			slabFraming.VolumeParametrB = 500;
