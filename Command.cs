@@ -14,7 +14,6 @@ namespace SlabFraming_1
 		{
 			try
 			{
-				// add comment
 				MyWindow.MainWindow window = new MyWindow.MainWindow();
 				window.DataContext = new MyWindow.ViewModel(commandData, window);
 				window.ShowDialog();
