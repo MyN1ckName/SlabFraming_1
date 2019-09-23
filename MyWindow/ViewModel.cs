@@ -20,7 +20,7 @@ namespace SlabFraming_1.MyWindow
 			slabFraming = new SlabFraming(commandData);
 			doc = commandData.Application.ActiveUIDocument.Document;
 			this.window = window;
-			slabFraming.NameRebarShape = "Стж_П";
+			slabFraming.NameRebarShape = "Стж_Г";
 			slabFraming.RebarSpace = 200;
 			slabFraming.VolumeParametrA = 500;
 			slabFraming.VolumeParametrB = 500;
@@ -28,17 +28,36 @@ namespace SlabFraming_1.MyWindow
 
 		public List<string> GetRebarBarType
 		{
-			get { return (new GetRebarBarType(doc).GetRebarBarTypeInModel()); }
+			get { return new GetRebarBarType(doc).GetRebarBarTypeInModel(); }
 		}
 
-		// Свойство NameRebarShape пока не используется 
+		public List<string> GetNameRebarShape
+		{
+			get { return slabFraming.AvailableRebarShape(); }
+		}
+
 		public string NameRebarShape
 		{
 			get { return slabFraming.NameRebarShape; }
 			set
 			{
 				slabFraming.NameRebarShape = value;
+				GetImageName = value;
 				OnPropertyChanged("NameRebarShape");
+			}
+		}
+
+		private string getImageName = "Image/G.png";
+		public string GetImageName
+		{ 
+			get { return getImageName; }
+			set
+			{
+				if (value == "Стж_Г")
+					getImageName = "Image/G.png";
+				else if (value == "Стж_П")
+					getImageName = "Image/P.png";
+				OnPropertyChanged("GetImageName");
 			}
 		}
 

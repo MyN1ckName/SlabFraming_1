@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -31,6 +32,14 @@ namespace SlabFraming_1
 		public double VolumeParametrA { get; set; }
 		public double VolumeParametrB { get; set; }
 		public double RebarSpace { get; set; }
+
+		public List<string> AvailableRebarShape()
+		{
+			List<string> rs = new List<string>();
+			rs.Add("Стж_П");
+			rs.Add("Стж_Г");
+			return rs;
+		}
 
 		public void GetFraming()
 		{

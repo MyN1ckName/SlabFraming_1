@@ -13,7 +13,7 @@ namespace SlabFraming_1
 			this.doc = doc;
 		}
 
-		string pattern = @"^ADDITIONAL(\w*)";
+		private string pattern = @"^ADDITIONAL(\w*)";
 
 		private List<string> rbt;
 		public List<string> GetRebarBarTypeInModel()
