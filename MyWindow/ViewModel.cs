@@ -22,8 +22,8 @@ namespace SlabFraming_1.MyWindow
 			this.window = window;
 			slabFraming.NameRebarShape = "Стж_Г";
 			slabFraming.RebarSpace = 200;
-			slabFraming.VolumeParametrA = 500;
-			slabFraming.VolumeParametrB = 500;
+			slabFraming.VolumeParametrA = 600;
+			slabFraming.VolumeParametrB = 700;
 		}
 
 		public List<string> GetRebarBarType

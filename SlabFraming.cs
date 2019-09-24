@@ -76,7 +76,9 @@ namespace SlabFraming_1
 				{
 					if (planarFace.FaceNormal.Z == 0)
 					{
-						XYZ origin = GetOrigin(planarFace, VolumeParametrA / coof);
+						XYZ origin = GetOrigin(planarFace
+							,VolumeParametrA / coof
+							,NameRebarShape);
 
 						using (Transaction t = new Transaction(doc, "SlabReinforcement_3"))
 						{
@@ -120,7 +122,7 @@ namespace SlabFraming_1
 							}
 							if (NameRebarShape == "Стж_П")
 							{
-								XYZ xVec = -planarFace.XVector;
+								XYZ xVec = planarFace.XVector;
 								XYZ yVec = -planarFace.FaceNormal;
 
 								Rebar rebar = Rebar.CreateFromRebarShape(doc, rebarShape
@@ -209,7 +211,9 @@ namespace SlabFraming_1
 			return host;
 		}
 
-		private XYZ GetOrigin(PlanarFace planarFace, double volumeParametrA)
+		private XYZ GetOrigin(PlanarFace planarFace
+			,double volumeParametrA
+			,string nameRebarShape)
 		{
 			double x = planarFace.Origin.X;
 			double y = planarFace.Origin.Y;
@@ -218,14 +222,15 @@ namespace SlabFraming_1
 				(doc.GetElement(host.get_Parameter
 				(BuiltInParameter.CLEAR_COVER_TOP).AsElementId()) as RebarCoverType)
 				.CoverDistance;
+
 			double z = planarFace.Origin.Z + planarFace.GetBoundingBox().Max.U
 						- topCoverDistance;
 			double otherCoverDistance =
 				(doc.GetElement(host.get_Parameter
 				(BuiltInParameter.CLEAR_COVER_OTHER).AsElementId()) as RebarCoverType)
 				.CoverDistance;
-
-			if (NameRebarShape == "Стж_Г")
+			
+			if (nameRebarShape == "Стж_Г")
 			{
 				if (planarFace.FaceNormal.X > 0)
 					x =
@@ -245,8 +250,8 @@ namespace SlabFraming_1
 						* (volumeParametrA + otherCoverDistance));
 				return new XYZ(x, y, z);
 			}
-
-			else if (NameRebarShape == "Стж_П")
+				
+			  if (nameRebarShape == "Стж_П")
 			{
 				if (planarFace.FaceNormal.X > 0)
 					x = x - Math.Abs(planarFace.FaceNormal.X * otherCoverDistance);
@@ -258,6 +263,7 @@ namespace SlabFraming_1
 					y = y + Math.Abs(planarFace.FaceNormal.Y * otherCoverDistance);
 				return new XYZ(x, y, z);
 			}
+			
 			else return null;
 		}
 	}
