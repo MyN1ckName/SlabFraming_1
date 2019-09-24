@@ -12,18 +12,20 @@ namespace SlabFraming_1.MyWindow
 	class ViewModel : INotifyPropertyChanged, IDataErrorInfo
 	{
 		SlabFraming slabFraming;
-		Document doc;
+		readonly Document doc;
 		Window window;
 
 		public ViewModel(ExternalCommandData commandData, Window window)
 		{
-			slabFraming = new SlabFraming(commandData);
+			slabFraming = new SlabFraming(commandData)
+			{
+				NameRebarShape = "Стж_П",
+				RebarSpace = 200,
+				VolumeParametrA = 1500,
+				VolumeParametrB = 700
+			};
 			doc = commandData.Application.ActiveUIDocument.Document;
-			this.window = window;
-			slabFraming.NameRebarShape = "Стж_Г";
-			slabFraming.RebarSpace = 200;
-			slabFraming.VolumeParametrA = 600;
-			slabFraming.VolumeParametrB = 700;
+			this.window = window; 
 		}
 
 		public List<string> GetRebarBarType
@@ -49,7 +51,7 @@ namespace SlabFraming_1.MyWindow
 
 		private string getImageName = "Image/G.png";
 		public string GetImageName
-		{ 
+		{
 			get { return getImageName; }
 			set
 			{

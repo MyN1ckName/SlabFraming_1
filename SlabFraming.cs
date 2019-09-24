@@ -50,9 +50,11 @@ namespace SlabFraming_1
 			if (RebarSpace < 50)
 				throw new ArgumentException("Значение RebarSpace должно быть больше 50");
 
-			Options geoOptions = new Options();
-			geoOptions.View = doc.ActiveView;
-			geoOptions.IncludeNonVisibleObjects = true;
+			Options geoOptions = new Options()
+			{
+				View = doc.ActiveView,
+				IncludeNonVisibleObjects = true
+			};
 			GeometryElement geoElement = host.get_Geometry(geoOptions);
 
 			FaceArray faceArray = new FaceArray();
@@ -77,8 +79,8 @@ namespace SlabFraming_1
 					if (planarFace.FaceNormal.Z == 0)
 					{
 						XYZ origin = GetOrigin(planarFace
-							,VolumeParametrA / coof
-							,NameRebarShape);
+							, VolumeParametrA / coof
+							, NameRebarShape);
 
 						using (Transaction t = new Transaction(doc, "SlabReinforcement_3"))
 						{
@@ -212,26 +214,25 @@ namespace SlabFraming_1
 		}
 
 		private XYZ GetOrigin(PlanarFace planarFace
-			,double volumeParametrA
-			,string nameRebarShape)
+			, double volumeParametrA
+			, string nameRebarShape)
 		{
-			double x = planarFace.Origin.X;
-			double y = planarFace.Origin.Y;
-
+			double otherCoverDistance =
+				(doc.GetElement(host.get_Parameter
+				(BuiltInParameter.CLEAR_COVER_OTHER).AsElementId()) as RebarCoverType)
+				.CoverDistance;
 			double topCoverDistance =
 				(doc.GetElement(host.get_Parameter
 				(BuiltInParameter.CLEAR_COVER_TOP).AsElementId()) as RebarCoverType)
 				.CoverDistance;
 
-			double z = planarFace.Origin.Z + planarFace.GetBoundingBox().Max.U
-						- topCoverDistance;
-			double otherCoverDistance =
-				(doc.GetElement(host.get_Parameter
-				(BuiltInParameter.CLEAR_COVER_OTHER).AsElementId()) as RebarCoverType)
-				.CoverDistance;
-			
 			if (nameRebarShape == "Стж_Г")
 			{
+				double x = planarFace.Origin.X;
+				double y = planarFace.Origin.Y;
+				double z = planarFace.Origin.Z + planarFace.GetBoundingBox().Max.U
+					- topCoverDistance;
+
 				if (planarFace.FaceNormal.X > 0)
 					x =
 						x - Math.Abs(planarFace.FaceNormal.X
@@ -250,20 +251,18 @@ namespace SlabFraming_1
 						* (volumeParametrA + otherCoverDistance));
 				return new XYZ(x, y, z);
 			}
-				
-			  if (nameRebarShape == "Стж_П")
+
+			if (nameRebarShape == "Стж_П")
 			{
-				if (planarFace.FaceNormal.X > 0)
-					x = x - Math.Abs(planarFace.FaceNormal.X * otherCoverDistance);
-				if (planarFace.FaceNormal.X < 0)
-					x = x + Math.Abs(planarFace.FaceNormal.X * otherCoverDistance);
-				if (planarFace.FaceNormal.Y > 0)
-					y = y - Math.Abs(planarFace.FaceNormal.Y * otherCoverDistance);
-				if (planarFace.FaceNormal.Y < 0)
-					y = y + Math.Abs(planarFace.FaceNormal.Y * otherCoverDistance);
+				double x = planarFace.Origin.X - Math.Abs(planarFace.FaceNormal.X
+					* (otherCoverDistance - 500 / coof));
+				double y = planarFace.Origin.Y - Math.Abs(planarFace.FaceNormal.Y
+					* (otherCoverDistance - 500 / coof));
+				double z = planarFace.Origin.Z + planarFace.GetBoundingBox().Max.U
+					- topCoverDistance;
+
 				return new XYZ(x, y, z);
 			}
-			
 			else return null;
 		}
 	}
