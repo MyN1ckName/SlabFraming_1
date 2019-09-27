@@ -69,7 +69,6 @@ namespace SlabFraming_1
 
 			RebarShape rebarShape = GetRebarShape(NameRebarShape);
 			RebarBarType rebarBarType = GetRebarBarType(NameRebarBarType);
-
 			using (TransactionGroup tg = new TransactionGroup(doc
 			, "TransactionGroupSlabReinforcement_3"))
 			{
@@ -258,11 +257,19 @@ namespace SlabFraming_1
 				double y = planarFace.Origin.Y;
 
 				if (planarFace.FaceNormal.X < 0)
-					x = planarFace.Origin.X + Math.Abs(planarFace.FaceNormal.X
+					x = x + Math.Abs(planarFace.FaceNormal.X
 						* ((VolumeParametrA - 500) / coof));
 				if (planarFace.FaceNormal.X > 0)
-					x = planarFace.Origin.X - Math.Abs(planarFace.FaceNormal.X
+					x = x - Math.Abs(planarFace.FaceNormal.X
 						* ((VolumeParametrA - 500) / coof));
+
+				if (planarFace.FaceNormal.Y < 0)
+					y = y + Math.Abs(planarFace.FaceNormal.Y
+						* ((VolumeParametrA - 500) / coof));
+				if (planarFace.FaceNormal.Y > 0)
+					y = y - Math.Abs(planarFace.FaceNormal.Y
+						* ((VolumeParametrA - 500) / coof));
+
 				double z = planarFace.Origin.Z + planarFace.GetBoundingBox().Max.U
 					- topCoverDistance;
 				return new XYZ(x, y, z);
