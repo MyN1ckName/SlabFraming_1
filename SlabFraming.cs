@@ -124,7 +124,7 @@ namespace SlabFraming_1
 							}
 							if (NameRebarShape == "Стж_П")
 							{
-								XYZ xVec = planarFace.XVector;
+								XYZ xVec = -planarFace.XVector;
 								XYZ yVec = -planarFace.FaceNormal;
 
 								Rebar rebar = Rebar.CreateFromRebarShape(doc, rebarShape
@@ -254,13 +254,17 @@ namespace SlabFraming_1
 
 			if (nameRebarShape == "Стж_П")
 			{
-				double x = planarFace.Origin.X - Math.Abs(planarFace.FaceNormal.X
-					* (otherCoverDistance - 500 / coof));
-				double y = planarFace.Origin.Y - Math.Abs(planarFace.FaceNormal.Y
-					* (otherCoverDistance - 500 / coof));
+				double x = planarFace.Origin.X;
+				double y = planarFace.Origin.Y;
+
+				if (planarFace.FaceNormal.X < 0)
+					x = planarFace.Origin.X + Math.Abs(planarFace.FaceNormal.X
+						* ((VolumeParametrA - 500) / coof));
+				if (planarFace.FaceNormal.X > 0)
+					x = planarFace.Origin.X - Math.Abs(planarFace.FaceNormal.X
+						* ((VolumeParametrA - 500) / coof));
 				double z = planarFace.Origin.Z + planarFace.GetBoundingBox().Max.U
 					- topCoverDistance;
-
 				return new XYZ(x, y, z);
 			}
 			else return null;
