@@ -165,6 +165,22 @@ namespace SlabFraming_1
 			}
 		}
 
+		public double OptimalVolumeParametrB()
+		{
+			double topCoverDistance =
+				(doc.GetElement(host.get_Parameter
+				(BuiltInParameter.CLEAR_COVER_TOP).AsElementId()) as RebarCoverType)
+				.CoverDistance;
+			double bottomCoverDistance =
+				(doc.GetElement(host.get_Parameter
+				(BuiltInParameter.CLEAR_COVER_BOTTOM).AsElementId()) as RebarCoverType)
+				.CoverDistance;
+			double thicness =
+				host.get_Parameter(BuiltInParameter.FLOOR_ATTR_THICKNESS_PARAM).AsDouble();
+			return (thicness - (topCoverDistance + bottomCoverDistance)) * coof;
+		}
+
+
 		private void SetParametr(Parameter para)
 		{
 			if (para.Definition.Name == "A")
@@ -258,17 +274,17 @@ namespace SlabFraming_1
 
 				if (planarFace.FaceNormal.X < 0)
 					x = x + Math.Abs(planarFace.FaceNormal.X
-						* ((VolumeParametrA - 500) / coof));
+						* ((VolumeParametrA + otherCoverDistance - 500) / coof));
 				if (planarFace.FaceNormal.X > 0)
 					x = x - Math.Abs(planarFace.FaceNormal.X
-						* ((VolumeParametrA - 500) / coof));
+						* ((VolumeParametrA + otherCoverDistance - 500) / coof));
 
 				if (planarFace.FaceNormal.Y < 0)
 					y = y + Math.Abs(planarFace.FaceNormal.Y
-						* ((VolumeParametrA - 500) / coof));
+						* ((VolumeParametrA + otherCoverDistance - 500) / coof));
 				if (planarFace.FaceNormal.Y > 0)
 					y = y - Math.Abs(planarFace.FaceNormal.Y
-						* ((VolumeParametrA - 500) / coof));
+						* ((VolumeParametrA + otherCoverDistance - 500) / coof));
 
 				double z = planarFace.Origin.Z + planarFace.GetBoundingBox().Max.U
 					- topCoverDistance;

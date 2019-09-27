@@ -22,8 +22,8 @@ namespace SlabFraming_1.MyWindow
 				NameRebarShape = "Стж_Г",
 				RebarSpace = 200,
 				VolumeParametrA = 500,
-				VolumeParametrB = 500
 			};
+			slabFraming.VolumeParametrB = slabFraming.OptimalVolumeParametrB();
 			doc = commandData.Application.ActiveUIDocument.Document;
 			this.window = window; 
 		}
@@ -92,7 +92,6 @@ namespace SlabFraming_1.MyWindow
 				OnPropertyChanged("VolumeParametrA");
 			}
 		}
-
 		public double VolumeParametrB
 		{
 			get { return slabFraming.VolumeParametrB; }
