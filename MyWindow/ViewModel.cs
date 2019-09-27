@@ -19,10 +19,10 @@ namespace SlabFraming_1.MyWindow
 		{
 			slabFraming = new SlabFraming(commandData)
 			{
-				NameRebarShape = "Стж_П",
+				NameRebarShape = "Стж_Г",
 				RebarSpace = 200,
-				VolumeParametrA = 1500,
-				VolumeParametrB = 700
+				VolumeParametrA = 500,
+				VolumeParametrB = 500
 			};
 			doc = commandData.Application.ActiveUIDocument.Document;
 			this.window = window; 
